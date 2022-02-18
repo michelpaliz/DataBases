@@ -93,10 +93,16 @@ INSERT INTO
   compras_ventas(id, fk_tercero, comp_venta, fecha, base)
 VALUES
   (DEFAULT, "44444444A", "v", "2021/10/27", 1600);
+--*!INSERTAR LOS IMPORTES DEL IVA EN LA TABLA IVA
+update
+  compras_ventas c
+set
+  c.iva = 0.21 * c.base;
+---! INSERTANDO LOS VALOERES DE LA TABAL TOTAL
 update
   compras_ventas
 set
-  iva = 0.21;
+  total = base + iva;
 update
   compras_ventas
 set
@@ -123,3 +129,134 @@ Select
   c.iva = (0.21 * c.base) as iva
 from
   compras_ventas c;
+--*Fecha 18/02/2022
+  --!VAMOS A INSERTAR MAS CAMPOS EN LA TABLA COMPRAS_VENTAS
+select
+  id,
+  comp_venta,
+  fk_tercero,
+  QUARTER(CV.fecha) tri,
+  YEAR(CV.fecha) ejercicio,
+  SUM(base),
+  SUM(iva),
+  SUM(total)
+FROM
+  compras_ventas CV
+GROUP BY
+  comp_venta,
+  fk_tercero,
+  tri,
+  ejercicio;
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "11111111A", "C", "2020/01/01", 10);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "11111111A", "C", "2020/03/27", 290);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "11111111A", "C", "2020/11/27", 700);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "11111111A", "V", "2020/12/27", 600);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "22222222A", "C", "2020/02/27", 200);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "22222222A", "C", "2020/04/27", 80);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "22222222A", "C", "2020/08/27", 700);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "22222222A", "V", "2020/02/27", 1500);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "33333333A", "C", "2020/01/27", 180);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "33333333A", "C", "2020/07/27", 1900);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "33333333A", "V", "2020/10/27", 250);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "44444444A", "v", "2020/01/27", 100);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "44444444A", "v", "2020/04/27", 100);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "44444444A", "v", "2020/05/27", 100);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "44444444A", "v", "2020/10/27", 500);
+--!insertamos valores del anyo 2022
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "11111111A", "C", "2022/01/01", 10);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "11111111A", "C", "2022/01/27", 290);
+INSERT INTO
+  compras_ventas(id, fk_tercero, comp_venta, fecha, base)
+VALUES
+  (DEFAULT, "11111111A", "C", "2022/11/27", 700);
+--! QUIERO SABER EL TOTAL DE CADA ANYO
+select
+  year(CV.FECHA) ejercicio,
+  round(sum(base), 2) b,
+  round(sum(iva), 2) i,
+  round(sum(total), 2) t
+from
+  compras_ventas cv
+GROUP BY
+  ejercicio;
+--!COM
+select
+  year(CV.FECHA) ejercicio,
+  concat(quarter(cv.fecha), "T") tri,
+  round(sum(base), 2) b,
+  round(sum(iva), 2) i,
+  round(sum(total), 2) t
+from
+  compras_ventas cv
+GROUP BY
+  ejercicio,
+  tri;
+---!mas complet
+select
+  year(CV.FECHA) ejercicio,
+  concat(quarter(cv.fecha), "T") tri,
+  cv.fk_tercero cif,
+  comp_venta ccvv,
+  round(sum(base), 2) b,
+  round(sum(iva), 2) i,
+  round(sum(total), 2) t
+from
+  compras_ventas cv
+GROUP BY
+  ejercicio,
+  cif,
+  ccvv
+having
+  ---! el having es ocmo filtrador del group by
+  t > 3000;
