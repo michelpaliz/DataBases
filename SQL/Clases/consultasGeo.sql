@@ -72,4 +72,48 @@ from
   join municipios m on m.fk_prov = p.id
   and m.fk_comarca = c.id
   join localidades l on m.id = l.fk_municipio;
--- saca un listado con las regiones que tengan mas de 8000 localidades
+select
+  *
+from
+  comarcas c
+where
+  c.nombre;
+--ahora llegar a municipios
+  -- saca un listado con las regiones que tengan mas de 8000 localidades
+select
+  R.nombre,
+  p.nombre,
+  c.nombre
+from
+  regiones r
+  join provincias p on r.id = p.fk_region
+  join prov_comarcas pc on p.id = pc.fk_provincia
+  join comarcas c on pc.fk_comarca = c.id
+  join municipios m on m.fk_prov = p.id
+  and m.fk_comarca = c.id
+  join localidades l on m.id = l.fk_municipio
+GROUP BY
+  l.id
+having
+  l.id > 5000;
+--luego sacar la media de cada localidades de las regiones
+select
+  count(*)
+from
+  localidades;
+set
+  @loc: = (
+    select
+      count(*)
+    from
+      localidades
+  );
+set
+  @reg: = (
+    Select
+      count(*)
+    from
+      regiones
+  );
+select
+  @loc / @reg;
