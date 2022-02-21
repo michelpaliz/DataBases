@@ -109,3 +109,26 @@ from
   alumno a
 where
   a.EMPLEO = "no";
+--!Muestarme los apellidos de los alumnos que conmiencen por por "BU"
+select
+  a.dni,
+  a.nombres,
+  a.apellidos
+from
+  alumno a
+where
+  a.APELLIDOS like "Bu%";
+--!Muestrame los diferentes valores que hay en la columna EMPLEO
+Select
+  count(distinct a.EMPLEO) as posibles_valores -- ponemos el distinct para que solo sace los valores posibles, en este caso si o no
+from
+  alumno a;
+--sale un dos porque hay un si y un no;
+  --ahora mas claro `
+select
+  count(*),
+  a.EMPLEO
+from
+  alumno a
+group by
+  a.EMPLEO;

@@ -260,3 +260,24 @@ GROUP BY
 having
   ---! el having es ocmo filtrador del group by
   t > 3000;
+-- *Fecha 02/21/2022
+--todo lo que sea funciones va en el having
+select
+  year(CV.FECHA) ejercicio,
+  concat(quarter(cv.fecha), "T") tri,
+  cv.fk_tercero cif,
+  comp_venta ccvv,
+  round(sum(base), 2) b,
+  round(sum(iva), 2) i,
+  round(sum(total), 2) t
+from
+  compras_ventas cv
+where comp_venta = "C"
+GROUP BY
+  ejercicio,
+  cif,
+  ccvv
+having
+  t > 3000;
+
+
