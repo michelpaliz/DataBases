@@ -132,3 +132,45 @@ from
   alumno a
 group by
   a.EMPLEO;
+--*Fecha 02/22/2022
+SELECT
+  fabricante.nombre,
+  COUNT(producto.codigo)
+FROM
+  fabricante
+  INNER JOIN producto ON fabricante.codigo = producto.codigo_fabricante
+GROUP BY
+  fabricante.codigo
+HAVING
+  COUNT(producto.codigo) >= (
+    SELECT
+      COUNT(producto.codigo)
+    FROM
+      fabricante
+      INNER JOIN producto ON fabricante.codigo = producto.codigo_fabricante
+    WHERE
+      fabricante.nombre = 'Asus'
+  );
+--!
+select
+  f1.nombre
+from
+  fabricante f1
+  join producto p1 on p1.codigo_fabricante = f1.codigo
+GROUP BY
+  f1.nombre
+having
+  count(f1.codigo) = (
+    select
+      count(f2.codigo)
+    from
+      fabricante f2
+      join producto p2 on p2.codigo_fabricante = f2.codigo
+    where
+      f2.nombre = "Asus"
+  );
+--!Ejemplo: Devuelve una listado de todos los productos que tienen un precio mayor o igual al precio medio de todos los productos de su mismo fabricante:
+select avg(p.precio) 
+from fabricante f join producto p
+on f.codigo = p.codigo_fabricante
+group by f.codigo ;
