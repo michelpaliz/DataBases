@@ -170,7 +170,12 @@ having
       f2.nombre = "Asus"
   );
 --!Ejemplo: Devuelve una listado de todos los productos que tienen un precio mayor o igual al precio medio de todos los productos de su mismo fabricante:
-select avg(p.precio) 
-from fabricante f join producto p
-on f.codigo = p.codigo_fabricante
-group by f.codigo ;
+select
+  avg(p.precio)
+from
+  fabricante f
+  join producto p on f.codigo = p.codigo_fabricante
+group by
+  f.codigo;
+
+  

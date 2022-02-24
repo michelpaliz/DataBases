@@ -261,7 +261,7 @@ having
   ---! el having es ocmo filtrador del group by
   t > 3000;
 -- *Fecha 02/21/2022
---todo lo que sea funciones va en el having
+  --todo lo que sea funciones va en el having
 select
   year(CV.FECHA) ejercicio,
   concat(quarter(cv.fecha), "T") tri,
@@ -272,12 +272,87 @@ select
   round(sum(total), 2) t
 from
   compras_ventas cv
-where comp_venta = "C"
+where
+  comp_venta = "C"
 GROUP BY
   ejercicio,
   cif,
   ccvv
 having
   t > 3000;
+-- Fecha 24/02/2022
+Select
+  avg(precio)
+from
+  fabricante f
+  join producto p on f.codigo = p.codigo_fabricante
+group by
+  f.codigo;
+--Sacar una select todos los productos con mayor precio de la media
+  Create view tabla as(
+    Select
+      avg(p.precio) media,
+      p.codigo_fabricante cf
+    from
+      producto p
+    group by
+      p.codigo_fabricante
+  );
+select
+  *
+from
+  tabla;
+select
+  *
+from
+  producto p
+  join tabla t on p.nombre = t.cf;
+select
+  *
+from
+  producto p
+  join tabla t on p.codigo_fabricante = t.cf
+where
+  p.precio >= t.media;
+select
+  *
+from
+  producto p
+  join fabricante f on p.codigo_fabricante = f.codigo
+  join (
+    Select
+      AVG(p.precio) media,
+      p.codigo_fabricante cf
+    FROM
+      producto p
+    GROUP BY
+      p.codigo_fabricante
+  ) t on p.codigo_fabricante = t.cf
+where
+  p.precio >= t.media;
+--Realiza esto mismo sin poder utilizar join
+select
+  *,
+  (
+    Select
+      f.nombre
+    from
+      fabricante f
+    where
+      f.codigo = p.codigo_fabricante
+  )
+from
+  producto p
+  JOIN (
+    Select
+      AVG(p.precio) media,
+      p.codigo_fabricante cf
+    FROM
+      producto p
+    GROUP BY
+      p.codigo_fabricante
+  ) t on p.codigo_fabricante = t.cf
+where
+  p.precio >= t.media;
 
-
+  
