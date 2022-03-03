@@ -29,7 +29,7 @@ FROM
   llx_societe s
   JOIN llx_facture f ON s.rowid = f.fk_soc
 GROUP BY
-  s.rowid;
+  s.nom;
 --tercer paso arreglarlo para que las ventas aparezcan por anyos y despues por trimestres
 SELECT
   YEAR(F.datef) ejercicio,
@@ -39,7 +39,7 @@ FROM
   llx_societe s
   JOIN llx_facture f ON s.rowid = f.fk_soc
 GROUP BY
-  s.rowid;
+  s.nom;
 --ahora trimestralmente
 SELECT
   YEAR(F.datef) ejercicio,
@@ -52,7 +52,7 @@ FROM
 GROUP BY
   ejercicio,
   tri,
-  S.rowid;
+  S.nom;
 --ahora con el rollup que va quitando nivels d e agrupacion
 SELECT
   YEAR(F.datef) ejercicio,
@@ -65,4 +65,47 @@ FROM
 GROUP BY
   ejercicio,
   tri,
-  S.rowid WITH ROLLUP;
+  S.nom WITH ROLLUP;
+-- FECHA 03/03/22
+Select
+  *
+from
+  llx_facture_fourn;
+--ver cuales son las compras y las ventas
+SELECT
+  "Ventas",
+  YEAR(F.datef) ejercicio,
+  CONCAT(QUARTER(f.datef), "Trimestre") tri,
+  s.nom,
+  sum(f.total_ttc) total
+FROM
+  llx_societe s
+  JOIN llx_facture f ON s.rowid = f.fk_soc
+GROUP BY
+  ejercicio,
+  tri,
+  S.nom
+UNION
+SELECT
+  "Compras",
+  YEAR(F.datef) ejercicio,
+  CONCAT(QUARTER(f.datef), "Trimestre") tri,
+  s.nom,
+  sum(f.total_ttc) total
+FROM
+  llx_societe s
+  JOIN llx_facture_fourn f ON s.rowid = f.fk_soc
+GROUP BY
+  ejercicio,
+  tri,
+  S.nom WITH ROLLUP;
+--informe por ventas de tipo de iva
+  -- y que la factura sea mayor que mil le meteriamos un having
+select
+  sum(detalle.total_tva) suma_total_iva,
+  cabecera.total_tva suma_total_iva_por_defecto
+from
+  llx_facture cabecera
+  join llx_facturedet detalle on cabecera.rowid = detalle.fk_facture
+group by
+  cabecera.rowid;
