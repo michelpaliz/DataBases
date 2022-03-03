@@ -103,7 +103,8 @@ GROUP BY
   -- y que la factura sea mayor que mil le meteriamos un having
 select
   sum(detalle.total_tva) suma_total_iva,
-  cabecera.total_tva suma_total_iva_por_defecto
+  cabecera.total_tva suma_total_iva_por_defecto,
+  detalle.tva_tx tipodeIva
 from
   llx_facture cabecera
   join llx_facturedet detalle on cabecera.rowid = detalle.fk_facture
