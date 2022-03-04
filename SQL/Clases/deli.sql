@@ -110,3 +110,84 @@ from
   join llx_facturedet detalle on cabecera.rowid = detalle.fk_facture
 group by
   cabecera.rowid;
+-- FECHA 3/4/22
+  -- vamos a sacar un listado de todos los importes como ventas y compras agrupados por el tipo de iva
+SELECT
+  YEAR(C.datef) ejer,
+  D.tva_tx tipoIva,
+  SUM(d.total_tva) tot_iva
+FROM
+  llx_facture c
+  JOIN llx_facturedet d ON c.rowid = d.fk_facture
+GROUP BY
+  ejer,
+  tipoIva;
+--SEleccionar las compras y las ventas de la tabla
+SELECT
+  *
+FROM
+  (
+    (
+      SELECT
+        "V",
+        YEAR(C.datef) ejer,
+        D.tva_tx tipo,
+        SUM(D.total_tva) tot_iva
+      FROM
+        llx_facture C
+        join llx_facturedet D ON C.rowid = D.fk_facture
+      GROUP BY
+        ejer,
+        tipo
+    )
+    UNION
+      (
+        SELECT
+          "C",
+          YEAR(C2.datef) ejer,
+          D2.tva_tx tipo,
+          -1 * SUM(D2.tva) tot_iva
+        FROM
+          llx_facture_fourn C2
+          join llx_facture_fourn_det D2 ON C2.rowid = D2.fk_facture_fourn
+        GROUP BY
+          ejer,
+          tipo
+      )
+  ) mitabla;
+---RESUMEN TOTAL IVA
+SELECT
+  ejer,
+  SUM (tot_iva)
+FROM
+  (
+    (
+      SELECT
+        "V",
+        YEAR(C.datef) ejer,
+        D.tva_tx tipo,
+        SUM(D.total_tva) tot_iva
+      FROM
+        llx_facture C
+        join llx_facturedet D ON C.rowid = D.fk_facture
+      GROUP BY
+        ejer,
+        tipo
+    )
+    UNION
+      (
+        SELECT
+          "C",
+          YEAR(C2.datef) ejer,
+          D2.tva_tx tipo,
+          -1 * SUM(D2.tva) tot_iva
+        FROM
+          llx_facture_fourn C2
+          join llx_facture_fourn_det D2 ON C2.rowid = D2.fk_facture_fourn
+        GROUP BY
+          ejer,
+          tipo
+      )
+  ) mitabla
+GROUP BY
+  ejer;
