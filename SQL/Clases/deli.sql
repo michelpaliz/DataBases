@@ -379,3 +379,5 @@ GROUP BY
   compraventa.fk_soc,
   compraventa.tipo WITH ROLLUP;
 -- cuentamelo que tenga mayor de 3000 se utilizara el having que es el where de los group by
+
+
