@@ -379,5 +379,10 @@ GROUP BY
   compraventa.fk_soc,
   compraventa.tipo WITH ROLLUP;
 -- cuentamelo que tenga mayor de 3000 se utilizara el having que es el where de los group by
-
-
+  --Fecha 02
+  -- Default es autonumerico
+insert into
+  t1 (id, nombre)
+values(default, "A"),(Default, "B");
+insert into
+  t1 (nombre) ("A"),("B");
