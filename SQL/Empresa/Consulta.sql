@@ -207,6 +207,6 @@ from(
     from
       compras
   ) compraventa
-  join llx_societe s on compraventa.fk_soc = s.rowid
+  left join llx_societe s on compraventa.fk_soc = s.rowid
 GROUP BY
   compraventa.fk_soc;
