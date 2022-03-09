@@ -235,7 +235,7 @@ WHERE
 -- que campos hay en la tabla productos que enlazan con el tipo de iva
 SELECT
   impuestos.iva,
-  COUNT(producto.rowid)
+  COUNT(producto.rowid) impuestos
 FROM
   (
     SELECT
@@ -251,8 +251,8 @@ GROUP BY
   impuestos.iva;
 -- quiero que me saques todos los tipos de iva
 SELECT
-  impuestos.iva,
-  COUNT(producto.rowid)
+  impuestos.iva tiposIVA,
+  COUNT(producto.rowid) cuantosProductosHay
 FROM
   (
     SELECT
