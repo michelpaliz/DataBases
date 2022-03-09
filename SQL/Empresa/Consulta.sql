@@ -210,3 +210,5 @@ from(
   left join llx_societe s on compraventa.fk_soc = s.rowid
 GROUP BY
   compraventa.fk_soc;
+
+select * from llx_facture;
