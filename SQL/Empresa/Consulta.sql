@@ -149,5 +149,64 @@ from
         *
       from
         informeDetalleCompra
-    )tabla
+    ) tabla
   );
+-- Sacame  los tipos de iva que se puede usar en el pais es
+  --Estos son los distintos tipos de iva que hay en un pais
+  create view esIVA as
+Select
+  iva.*
+from
+  llx_c_country p
+  join llx_c_tva iva on p.rowid = iva.fk_pays
+where
+  p.code = "Es";
+drop view esIVA;
+--Que campos hay en la tabla productos que enlazan con el tipo de iva del pais es
+Select
+  impuestosEs.esIVA,
+  COUNT(producto.rowid)
+from
+  (
+    select
+      *
+    from
+      esIVA
+  ) impuestosEs
+  join llx_product producto on impuestosEs.rowid = producto.tva_tx
+GROUP by
+  impuestosEs.iva;
+--Seleccionar el nombre de la sociedad contando las ventas y compras por cada una de ellas
+  create view ventas as
+select
+  v.rowid,
+  "Venta" AliasTipo,
+  v.fk_soc
+from
+  llx_facture v;
+create view compras as
+select
+  c.rowid,
+  "Compra" AliasTipo,
+  c.fk_soc
+from
+  llx_facture_fourn c;
+--ahora unimos las querys de compras y ventas para reflejar que sociedad hemos vendido  y que proveedores hemos comprado
+  --Entonce uniremos las ventas y compras con la de sociedad
+Select
+  s.nom,
+  count(compraventa.rowid)
+from(
+    select
+      *
+    from
+      ventas
+    UNION
+    SELECT
+      *
+    from
+      compras
+  ) compraventa
+  join llx_societe s on compraventa.fk_soc = s.rowid
+GROUP BY
+  compraventa.fk_soc;
