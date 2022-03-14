@@ -222,6 +222,12 @@ select
 from
   proyecto;
 TRUNCATE contactos;
+--* Fecha 14-03-2022
+  --Vamos a meter los campos del iva
+insert into
+  iva
+values
+  (1, 0),(2, 0.04),(2, 0.07),(3, 0.10),(4, 0.21);
 --!Ejercicio 2
   -- 2.- Realiza una consulta SQL que genere los encabezados de una carta comercial para los 5 primeros contactos de la base de datos. La cabecera tendrá el siguiente formato (1.5 pto):
   -- Estimado (o Estimada según sexo) Sr. (o Sra según sexo) Nombre (Asegurarse que la primera letra sea mayúsculas), CARGO (asegurarse que sea todo en mayúsculas) de Nombre de la empresa (asegurarse de eliminar los espacios en blanco al principio y al final).
