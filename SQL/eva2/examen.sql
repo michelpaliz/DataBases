@@ -270,3 +270,13 @@ FROM
 GROUP BY
   nombre;
 -- 5. Realiza una consulta SQL que muestre TODOS los productos que NO han sido ni comprados, ni vendidos durante el ejercicio 2022, utiliza una variable para almacenar el año del ejercicio (2 pto).
+  --TERCER TRIMESTRE
+  -- **Fecha 17/03/2022
+  Create index idx_nombre on estados(nombre);
+--Creamos un indice
+  Create unique index idx_nombre ON cargos(nombre);
+DROP INDEX idx_nombre ON cargos;
+select
+  *
+from
+  cargos;
