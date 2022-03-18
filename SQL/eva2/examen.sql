@@ -280,3 +280,39 @@ select
   *
 from
   cargos;
+--* Fecha - 18 -03-2022
+  Create index varios on producto (descripcion, precio_compra, precio_venta);
+--Crear una tabla contactos2
+  --ENGINE
+  CREATE TABLE IF NOT EXISTS eva2.contactos2 (
+    id INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(45) NOT NULL,
+    telefono VARCHAR(45) NULL,
+    email VARCHAR(45) NULL,
+    sociedad_sociedad_id INT NOT NULL,
+    cargos_id INT NOT NULL,
+    sexo CHAR(1) NULL,
+    PRIMARY KEY (id),
+    UNIQUE INDEX movil_UNIQUE (telefono ASC),
+    INDEX fk_contactos_sociedad1_idx (sociedad_sociedad_id ASC),
+    INDEX fk_contactos_cargos1_idx (cargos_id ASC),
+    CONSTRAINT fk_contactos_sociedad1 FOREIGN KEY (sociedad_sociedad_id) REFERENCES eva2.sociedad (sociedad_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_contactos_cargos1 FOREIGN KEY (cargos_id) REFERENCES eva2.cargos (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  ) Engine = myISAM;
+--crear un fulltext sobre el campo de ocntacto con el nmbre y el relefono y el email.
+  create fulltext index idx_full on contactos(nombre, telefono, email);
+create fulltext index idx_full on contactos2(nombre, telefono, email);
+--Queries
+select
+  *
+from
+  contactos
+where
+  match(nombre, telefono, email) against ("gmail");
+--
+select
+  *
+from
+  contactos2
+where
+  match(nombre, telefono, email) against ("gmail");
