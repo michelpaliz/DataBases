@@ -316,3 +316,5 @@ from
   contactos2
 where
   match(nombre, telefono, email) against ("gmail");
+-- Fecha  21/03/2021;
+
