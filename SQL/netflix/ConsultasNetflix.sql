@@ -75,3 +75,15 @@ group by
   ejercicio
 ORDER BY
   ejercicio;
+--El numero de ventas por paises (lista todas las ventas (pagos)por paises)
+SELECT
+  p.nombre nombrePais,
+  p.total pagoTotal
+from
+  pago p
+  join cliente c on p.id_alquiler = c.id_cliente
+  join direccion d on d.id_direccion = c.id_cliente
+  join ciudad cd on cd.id_ciudad = d.id_ciudad
+  RIGHT join pais pa on cd.id_ciudad = pa.id_pais
+GROUP BY
+  pa.nombre;
