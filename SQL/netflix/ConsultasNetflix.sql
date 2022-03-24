@@ -50,3 +50,28 @@ GROUP BY
   p.id_actor
 ORDER BY
   2 desc;
+-- Fecha 24/03/2022
+  --contar el numero de pelicuals que hay por categorias
+select
+  c.nombre nombrePelicula,
+  count(pc.id_categoria) contador
+from
+  categoria c
+  left join pelicula_categoria pc on c.id_categoria = pc.id_categoria
+group by
+  c.id_categoria
+order by
+  contador asc;
+--Sacar un listado con todos los empleados y las ventas por ejercicio(ventas del 2005 y 2006)
+SELECT
+  year((p.fecha_pago)) ejercicio,
+  e.nombre Persona,
+  sum(p.total) sumaTotal
+from
+  empleado e
+  left join pago p on e.id_empleado = p.id_empleado
+group by
+  e.id_empleado,
+  ejercicio
+ORDER BY
+  ejercicio;
