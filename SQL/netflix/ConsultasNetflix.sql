@@ -77,13 +77,42 @@ ORDER BY
   ejercicio;
 --El numero de ventas por paises (lista todas las ventas (pagos)por paises)
 SELECT
-  p.nombre nombrePais,
-  p.total pagoTotal
+  pa.nombre nombrePais,
+  sum(p.total) pagoTotal
 from
   pago p
-  join cliente c on p.id_alquiler = c.id_cliente
-  join direccion d on d.id_direccion = c.id_cliente
+  join cliente c on p.id_cliente = c.id_cliente
+  join direccion d on d.id_direccion = c.id_direccion
   join ciudad cd on cd.id_ciudad = d.id_ciudad
-  RIGHT join pais pa on cd.id_ciudad = pa.id_pais
+  RIGHT join pais pa on cd.id_pais = pa.id_pais
 GROUP BY
-  pa.nombre;
+  pa.id_pais
+ORDER BY
+  pagoTotal DESC;
+-- Fecha 25-03-2022
+  --Crear una tabla pelicula, categoria, y actores, hay que conseguir
+  -- *pelicula p, pelicula_categoria pc, categoria c, pelicula_actor pa, actor a
+select
+  *
+from
+  pelicula_actor;
+------
+SELECT
+  p.titulo,
+  p.clasificacion,
+  p.descripcion
+FROM
+  pelicula p
+  join actor a on a.id_actor = p.id_pelicula
+union
+Select
+  p1.titulo,
+  p1.clasificacion,
+  p1.descripcion
+from
+  pelicula p1
+  join categoria c on p1.id_pelicula = c.id_categoria;
+Select
+  count(p.id_pelicula)
+from
+  pelicula p
