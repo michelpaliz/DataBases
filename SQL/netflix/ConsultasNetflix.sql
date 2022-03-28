@@ -96,23 +96,126 @@ select
   *
 from
   pelicula_actor;
-------
+-- Fecha 28/03/2022
+  ---- Creacion de tabla
+  DROP TABLE if exists google;
+CREATE table if not exists google(
+    id INT AUTO_INCREMENT primary KEY,
+    titulo VARCHAR(255),
+    descripcion TEXT,
+    clasificacion VARCHAR(5),
+    nombre VARCHAR(45),
+    apellidos VARCHAR(45),
+    categoria VARCHAR(25),
+    FULLTEXT KEY (
+      titulo,
+      descripcion,
+      nombre,
+      apellidos,
+      categoria
+    )
+  ) engine = MYISAM;
+TRUNCATE TABLE google;
+INSERT INTO
+  google(
+    titulo,
+    descripcion,
+    clasificacion,
+    nombre,
+    apellidos,
+    categoria
+  )
 SELECT
-  p.titulo,
-  p.clasificacion,
-  p.descripcion
+  CONCAT_WS(
+    " ",
+    P.titulo,
+    CONCAT("(", P.anyo_lanzamiento, ")")
+  ) tit,
+  P.descripcion,
+  P.clasificacion,
+  A.nombre,
+  A.apellidos,
+  C.nombre
 FROM
-  pelicula p
-  join actor a on a.id_actor = p.id_pelicula
-union
+  pelicula P,
+  pelicula_categoria PC,
+  categoria C,
+  pelicula_actor PA,
+  actor A
+WHERE
+  P.id_pelicula = PC.id_pelicula
+  AND PC.id_categoria = C.id_categoria
+  AND P.id_pelicula = PA.id_pelicula
+  AND PA.id_actor = A.id_actor;
+----  sacar todas las peliculas que contengas la pelicula shark
 Select
-  p1.titulo,
-  p1.clasificacion,
-  p1.descripcion
+  *
 from
-  pelicula p1
-  join categoria c on p1.id_pelicula = c.id_categoria;
-Select
-  count(p.id_pelicula)
-from
-  pelicula p
+  google;
+-----
+SELECT
+  distinct titulo,
+  descripcion,
+  clasificacion,
+  categoria,
+  MATCH(
+    titulo,
+    descripcion,
+    nombre,
+    apellidos
+  ) AGAINST (
+    "-Classics >ALICE drama +shark >emotion <action" IN BOOLEAN MODE
+  ) puntos
+FROM
+  google
+WHERE
+  MATCH(
+    titulo,
+    descripcion,
+    nombre,
+    apellidos
+  ) AGAINST (
+    ">ALICE drama +shark >emotion <action" IN BOOLEAN MODE
+  )
+ORDER BY
+  puntos desc;
+--sacar los registros que son mayor de 1 punto
+SELECT
+  distinct titulo,
+  descripcion,
+  clasificacion,
+  categoria,
+  MATCH(titulo, descripcion) AGAINST (
+    "-Classics >ALICE drama +shark >emotion <action" IN BOOLEAN MODE
+  ) puntos
+FROM
+  google
+WHERE
+  MATCH(titulo, descripcion) AGAINST (
+    "-Classics >ALICE drama +shark >emotion <action" IN BOOLEAN MODE
+  )
+having
+  puntos > 1
+ORDER BY
+  puntos desc;
+--tambien
+  SELECT
+  distinct titulo,
+  descripcion,
+  clasificacion,
+  categoria,
+  MATCH(titulo, descripcion) AGAINST (
+    "-Classics >ALICE drama +shark >emotion <action" IN BOOLEAN MODE
+  ) puntos
+FROM
+  google
+WHERE
+  (MATCH(titulo, descripcion) AGAINST (
+    "-Classics >ALICE drama +shark >emotion <action" IN BOOLEAN MODE
+  )) > 1
+having
+  puntos > 1
+ORDER BY
+  puntos desc;
+
+  
