@@ -199,7 +199,7 @@ having
 ORDER BY
   puntos desc;
 --tambien
-  SELECT
+SELECT
   distinct titulo,
   descripcion,
   clasificacion,
@@ -210,12 +210,12 @@ ORDER BY
 FROM
   google
 WHERE
-  (MATCH(titulo, descripcion) AGAINST (
-    "-Classics >ALICE drama +shark >emotion <action" IN BOOLEAN MODE
-  )) > 1
+  (
+    MATCH(titulo, descripcion) AGAINST (
+      "-Classics >ALICE drama +shark >emotion <action" IN BOOLEAN MODE
+    )
+  ) > 1
 having
   puntos > 1
 ORDER BY
   puntos desc;
-
-  
