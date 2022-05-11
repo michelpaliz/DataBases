@@ -94,3 +94,147 @@ id INT UNSIGNED PRIMARY KEY,
 tittle VARCHAR(100) NOT NULL
 );
 insert into post(id,tittle) values (1,"Transaction");
+
+---Fecha 17-04-2022
+
+CREATE TABLE Employee (
+    ID int AUTO_INCREMENT,
+    LastName varchar(255) ,
+    FirstName varchar(255),
+    Age int,
+    Salary double,
+    PRIMARY KEY(ID)
+);
+
+Drop table if exists employee;
+
+insert into employee (`FirstName`,`LastName`,`Age`,`Salary`)
+VALUES ("Michael", "Paliz", 21,900);
+insert into employee (`FirstName`,`LastName`,`Age`,`Salary`)
+VALUES ("Jhoan", "Paliz", 19,900);
+
+insert into employee (`FirstName`,`LastName`,`Age`,`Salary`)
+VALUES ("Selena", "Paliz", 3,900);
+
+
+
+
+Begin tran;
+update Employee
+set 
+  Salary = Salary + 100
+where ID = 1;
+WaitFor delay '00:00:10'
+Rollback tran;
+SELECT *
+FROM employee;
+
+
+
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
+Begin tran;
+SELECT *
+FROM employee;
+
+COMMIT TRAN;
+
+
+Begin Transaction;
+Select salary from employee where Id = 1;
+
+-- Do Some work
+waitfor delay '00:00:10';
+Select salary from employee where Id = 1;
+Commit Transaction;
+
+update employee set Salary = 500
+where ID = 1;
+
+
+---
+
+Begin transaction;
+select * from employee
+where ID BETWEEN 1 AND 3;
+waitfor delay  '00:00:10'
+select * from employee
+where ID BETWEEN 1 and 3;
+--
+
+insert into employee (`FirstName`,`LastName`,`Age`,`Salary`)
+VALUES ("Bobby", "Paliz", 47,900);
+
+--Fecha  26-05-2022
+
+CREATE FUNCTION Sex  ( person  char )
+RETURNS INT
+
+BEGIN
+
+   DECLARE sex  VARCHAR(20);
+   SET sex = "not known";
+   if(person = "H") then
+    set sex = "Male";
+    elseif(person="F");
+    sext sex = "Female";
+    END if;
+
+   RETURN sex;
+
+END; //
+
+DELIMITER ;
+
+-- fecha 06/05/2022
+--using triggers
+-- INSERT INTO LOG VALUES (NULL,SYSDATE(),"he metido a perico",vuser());
+--fecha 09-05-2022
+
+-- Trigger created sucessfully
+DELIMITER//
+ CREATE TRIGGER `my_log_trigger` AFTER INSERT ON `usuarios` FOR EACH ROW
+ BEGIN
+    insert into log (descripcion) value ('new register');
+      -- Use NEW and OLD constants for access to row
+ END;
+ DELIMITER ;
+ 
+Drop trigger my_log_trigger;
+
+--Los correos que tengan mas de 30 dias;
+DELIMITER //
+CREATE TRIGGER `limpia_email` AFTER INSERT ON `email` FOR EACH ROW
+BEGIN
+     delete from email e 
+     where e.papelera = 1 and
+     Datediff(Sysdate(),e.fecha) > 30;
+END;
+DELIMITER;
+
+
+select datediff(sysdate(),e)
+from email e;
+
+---Fecha 10-05-2022
+
+CREATE TABLE t1 (
+  id INT UNSIGNED PRIMARY KEY,
+    data VARCHAR(16)
+);
+
+CREATE TABLE t2 (
+  i INT UNSIGNED
+);
+CREATE TABLE t3 (
+  data VARCHAR(16),
+    i INT UNSIGNED
+);
+
+INSERT INTO t1 VALUES (1, 'A');
+INSERT INTO t1 VALUES (2, 'B');
+INSERT INTO t2 VALUES (10);
+INSERT INTO t2 VALUES (20);
+
+call curdemo();
+
