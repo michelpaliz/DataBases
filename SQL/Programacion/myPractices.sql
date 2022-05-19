@@ -57,3 +57,86 @@ set @start := 1, @finish := 10;
 Select sumatory(@start, @finish);
 
 DROP FUNCTION sumatory;
+
+--
+--hay que chekear la papelera por mas de 30 dias, 
+--
+SELECT plazos FROM factura WHERE factura_id = NEW.factura.id;
+---------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualiza_importe_pagos`(
+   IN `pid` INT,
+   IN `pimporte` FLOAT,
+   IN `pplazos` INT
+)
+LANGUAGE SQL
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
+BEGIN
+  DECLARE idpago INT; --para obtener los pagos de la factura cogiendo el id que aparezcan
+  DECLARE cont INT DEFAULT 0;
+  DECLARE a INT; -- pago
+  DECLARE t FLOAT; -- total de la factura
+  --*to loop over a predetermined number of rows one at a time. 
+  DECLARE cur CURSOR FOR 
+     SELECT id FROM pagos
+     WHERE fk_factura = pid; --- el parametro que estoy pasando en el procedimiento
+  OPEN cur;
+  --* hacemos una operacion que cuota le corresponde los pagos
+  SET a = ROUND(pimporte/pplazos,0);
+  SET t = pimporte;---
+  --*Empezamos el bucle 
+  WHILE cont < pplazos DO
+    fetch cur INTO idpago;
+    if cont = pplazos-1 then -- para saber si estoy en el ultimo registro
+      set a = t; -- pago = el resto por lo que me queda por pagar
+    END if;  
+    ---*actuliza la tabla
+    UPDATE pagos 
+      SET importe = a 
+      WHERE id = idpago;
+      --*contador para q el bucle no sea infinito
+    SET cont = cont +1;
+    --* para que me quede el resto 
+    SET t = t - a;
+  END WHILE;
+  CLOSE cur; 
+END
+
+----------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualiza_fecha_pagos`(
+   IN `pid` INT,
+   IN `pfecha` FLOAT
+)
+LANGUAGE SQL
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
+BEGIN
+  DECLARE idpago INT; --para obtener los pagos de la factura cogiendo el id que aparezcan
+  DECLARE cont INT DEFAULT 0;
+  --*to loop over a predetermined number of rows one at a time. 
+  DECLARE cur CURSOR FOR 
+     SELECT id FROM pagos 
+     WHERE fk_factura = pid; --- el parametro que estoy pasando en el procedimiento
+  OPEN cur;
+   WHILE cont < pplazos DO
+    fetch cur INTO idpago; -- el id me lo guardo en la variable idpago con el fetch idpago = 101
+    UPDATE pagos 
+      SET fecha_pago = DATE_ADD(pfecha, interval cont month) -- el cont empieza con 0 
+      WHERE id = idpago;
+    SET cont = cont +1;
+     END WHILE;
+  CLOSE cur; 
+END
+
+--! hacer una funcion comprobar clave pasada como minimo 8 char, que tiene un simbolo, si esta bien me devuelve el mismo si no pues me devuelve otra aleatoriamente.
+
+DROP FUNCTION IF EXISTS `function_name`;
+CREATE FUNCTION `checkPassword`(`password` varchar(50)) RETURNS varchar
+
+BEGIN
+  
+END;
