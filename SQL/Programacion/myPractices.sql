@@ -124,7 +124,7 @@ BEGIN
   OPEN cur;
    WHILE cont < pplazos DO
     fetch cur INTO idpago; -- el id me lo guardo en la variable idpago con el fetch idpago = 101
-    UPDATE pagos 
+     UPDATE pagos 
       SET fecha_pago = DATE_ADD(pfecha, interval cont month) -- el cont empieza con 0 
       WHERE id = idpago;
     SET cont = cont +1;
@@ -134,9 +134,27 @@ END
 
 --! hacer una funcion comprobar clave pasada como minimo 8 char, que tiene un simbolo, si esta bien me devuelve el mismo si no pues me devuelve otra aleatoriamente.
 
-DROP FUNCTION IF EXISTS `function_name`;
-CREATE FUNCTION `checkPassword`(`password` varchar(50)) RETURNS varchar
+DROP FUNCTION IF EXISTS `generaPassword`;
+CREATE FUNCTION `checkPassword`
+('pLongitud'varchar() 
+('pNumeros' varchar () 
+('pSimbolos' varchar() 
+('pLetras' varchar()) 
+returns varchar
+BEGIN
+  declare cont int default 0;
+  declare newpass varchar(50);
+  
+  return newpass;
+END;
 
+select round(rand()*10,0);
+
+select round
+
+
+CREATE FUNCTION `function_name`(`arg_name` INT) RETURNS INT
 BEGIN
   
 END;
+
