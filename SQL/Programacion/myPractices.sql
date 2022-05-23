@@ -136,14 +136,20 @@ END
 
 DROP FUNCTION IF EXISTS `generaPassword`;
 CREATE FUNCTION `checkPassword`
-('pLongitud'varchar() 
-('pNumeros' varchar () 
-('pSimbolos' varchar() 
-('pLetras' varchar()) 
+('pLongitud'varchar,
+'pNumeros' varchar,
+'pSimbolos' varchar, 
+'pLetras' varchar) 
 returns varchar
 BEGIN
   declare cont int default 0;
   declare newpass varchar(50);
+
+  if  longitud < 3 then
+    set newpass = "longitud_no_permitida";
+  else 
+    set newpass = "";
+  end if;
   
   return newpass;
 END;
