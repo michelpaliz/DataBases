@@ -219,6 +219,7 @@ END;
 Select
   generaalgo("aeiou", "$&!", "1234", 6);
 
+---*CREATE TABLES
 --Tabla actividades 
 CREATE TABLE IF NOT EXISTS `tabla_tareas` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -237,6 +238,17 @@ CREATE TABLE IF NOT EXISTS `tabla_calendario` (
   PRIMARY KEY `pk_id`(`id`)
 );
 
+CREATE TABLE IF NOT EXISTS `registro_movimientos` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nombre_usuario` int,
+  `fecha_actualizacion` DATE,
+  `operation` varchar(100),
+  PRIMARY KEY `pk_id`(`id`)
+);
+
+DROP TABLE IF EXISTS `registro_movimientos`;
+
+--*CREATE TRIGGERS
 CREATE TRIGGER `tareas`
 AFTER
 INSERT
@@ -246,3 +258,77 @@ insert into
   tabla_calendario (null,, sysdate(),);
 
 END;
+
+CREATE TRIGGER `registro`
+AFTER
+INSERT
+  ON `tabla_tareas` FOR EACH ROW for
+insert
+,
+update
+,
+  delete BEGIN as declare @login_name varchar(100)
+SELECT
+  @login_name = mysql.user
+from
+END;
+
+--!Trigger created
+CREATE TRIGGER `update_data`
+AFTER
+INSERT
+  ON `tabla_tareas` FOR EACH ROW BEGIN
+INSERT INTO
+  registro_movimientos
+values
+  (null, @ms, sysdate(), 'Insert_after');
+
+END;
+
+--*SELECTS TABLES
+SELECT
+  *
+FROM
+  mysql.user m
+where
+  m.User like '%root';
+
+SELECT
+  *
+FROM
+  registro_movimientos;
+
+--*DROP TABLES OR ROWS;
+s --- Delete rows from table 'tabla_calendario'
+DELETE FROM
+  tabla_calendario as t
+WHERE
+  t.id = 1;
+
+--*INSERTS VALUES NOW
+INSERT INTO
+  tabla_calendario
+VALUES
+  (
+    -- first row: values for the columns in the list above
+    'michael',
+    48,
+    now(),
+    6
+  );
+
+--*TESTING
+set
+  @message = CONCAT("SQL ", "Tutorial ", "is ", "fun!");
+
+set
+  @ms = CONCAT("Usuario ", user());
+
+select
+  @ms;
+
+select
+  @message;
+
+SELECT
+  CONCAT("SQL ", "Tutorial ", "is ", "fun!") AS ConcatenatedString;
