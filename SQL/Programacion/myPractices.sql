@@ -274,7 +274,7 @@ from
 END;
 
 --!Trigger created
-CREATE TRIGGER `update_data`
+CREATE TRIGGER `insert_data`
 AFTER
 INSERT
   ON `tabla_tareas` FOR EACH ROW BEGIN
@@ -282,6 +282,19 @@ INSERT INTO
   registro_movimientos
 values
   (null, @ms, sysdate(), 'Insert_after');
+
+END;
+
+--!
+DROP TRIGGER IF EXISTS `delete_date`;
+
+CREATE TRIGGER `delete_date`
+AFTER
+  DELETE ON `tabla_tareas` FOR EACH ROW BEGIN -- Use NEW and OLD constants for access to row
+delete from
+  tabla_calendario
+where
+  old.id = fk_tarea;
 
 END;
 
@@ -305,13 +318,16 @@ DELETE FROM
 WHERE
   t.id = 1;
 
+DROP TRIGGER IF EXISTS `update_data`;
+
 --*INSERTS VALUES NOW
 INSERT INTO
-  tabla_calendario
+  tabla_tareas
 VALUES
   (
     -- first row: values for the columns in the list above
-    'michael',
+    default,
+    'Jhoan',
     48,
     now(),
     6
