@@ -259,21 +259,8 @@ insert into
 
 END;
 
-CREATE TRIGGER `registro`
-AFTER
-INSERT
-  ON `tabla_tareas` FOR EACH ROW for
-insert
-,
-update
-,
-  delete BEGIN as declare @login_name varchar(100)
-SELECT
-  @login_name = mysql.user
-from
-END;
-
 --!Trigger created
+-- trigger al insertar data este el mio propio
 CREATE TRIGGER `insert_data`
 AFTER
 INSERT
@@ -285,9 +272,24 @@ values
 
 END;
 
---!
-DROP TRIGGER IF EXISTS `delete_date`;
+CREATE TRIGGER `tareas_after_insert`
+AFTER
+INSERT
+  ON `tabla_tareas` FOR EACH ROW BEGIN -- Use NEW and OLD constants for access to row
+  declare fin date;
 
+declare cont int default 0;
+
+--las horas por dias que hay que estudiar
+declare i int default ceiling (new.duracion / new.horasdia);
+
+declare restoHora int default new.horasdia - (
+  ceiling(new.duracion / new.horasdia) * new.horasdia - new.duracion
+)
+if esLaboral()
+END;
+
+-- trigger al eliminar data
 CREATE TRIGGER `delete_date`
 AFTER
   DELETE ON `tabla_tareas` FOR EACH ROW BEGIN -- Use NEW and OLD constants for access to row
@@ -312,6 +314,8 @@ FROM
   registro_movimientos;
 
 --*DROP TABLES OR ROWS;
+DROP TRIGGER IF EXISTS `delete_date`;
+
 s --- Delete rows from table 'tabla_calendario'
 DELETE FROM
   tabla_calendario as t
@@ -333,7 +337,39 @@ VALUES
     6
   );
 
+--*FUNCTIONS
+--function
+CREATE FUNCTION `esLaboral`(`pFecha` date) RETURNS INT BEGIN if dayofweek(pFecha) = 1
+or dayofweek(pFecha) = 7 then return false;
+
+else return true;
+
+end if;
+
+--1 = domingo y 7 es sabado
+END;
+
+---another function
+CREATE FUNCTION `siguienteLaboral`(`pFecha` date) RETURNS date BEGIN declare nFecha date;
+
+--aqui metemos el parametro  de nuestra fecha.
+set
+  nFecha = date_add(pFecha, interval 1 day);
+
+while not esLaboral(nFecha) do
+set
+  nFecha = date_add(nFecha, interval 1 day);
+
+end while;
+
+return nFecha;
+
+END;
+
 --*TESTING
+select
+  date_add("2017-06-15", interval 10 day);
+
 set
   @message = CONCAT("SQL ", "Tutorial ", "is ", "fun!");
 
