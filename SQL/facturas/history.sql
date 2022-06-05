@@ -27,3 +27,5 @@ VALUES ('factura1');
 
 select * from facturas;/* 2022-06-05 23:55:20 [5 ms] */ 
 select * from facturas;
+
+-- comment
